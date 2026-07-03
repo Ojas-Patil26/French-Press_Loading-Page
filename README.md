@@ -1,5 +1,7 @@
 # French Press — CSS Loading Screen
 
+**[Live demo →](https://french-press-loading-page.vercel.app)**
+
 A French press loading animation built with pure CSS keyframes and a small amount of vanilla JavaScript. The press brews and plunges while the page "loads", then pours itself out, drops a final drip, and bursts into a confetti splatter before fading away to reveal the page.
 
 ## How the loading screen works
