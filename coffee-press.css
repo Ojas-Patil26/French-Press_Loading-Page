@@ -1,6 +1,8 @@
 html, body {
   height: 100%;
   margin: 0;
+  /* Match the loader so fading it out doesn't flash white */
+  background: #000000;
 }
 
 .wrapper {
@@ -163,7 +165,6 @@ html, body {
   right: 5%;
   bottom: 15%;
   left: 5%;
-  transform: translateY(-60%);
   animation: plunge 10000ms infinite;
 }
 
@@ -265,7 +266,10 @@ html, body {
   100% { opacity: 0; }
 }
 
-/* --- Loaded State Overrides --- */
+/* --- Loaded State Overrides ---
+   The duplicate .wrapper.is-loaded .drop rule that used to live at the
+   bottom of this file has been removed; the declaration above (with the
+   1950ms delay) is the single source of truth. */
 
 .wrapper.is-loaded .brewed-coffee {
   animation: fluid-pour 3000ms ease-in-out forwards;
@@ -305,11 +309,6 @@ html, body {
 @keyframes pour-once {
   0% { transform: translate(-50%, -20%) rotate(0deg); }
   65%, 100% { transform: translate(-50%, -20%) rotate(90deg); }
-}
-
-.wrapper.is-loaded .drop {
-  animation: drop-once 800ms forwards;
-  animation-delay: 1950ms;
 }
 
 @keyframes drop-once {
@@ -358,5 +357,14 @@ html, body {
   100% {
     transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(1);
     opacity: 0;
+  }
+}
+
+/* Respect users who prefer reduced motion: skip all animation and let the
+   script fade the loader out immediately after the page loads. */
+@media (prefers-reduced-motion: reduce) {
+  .wrapper *,
+  .particle {
+    animation: none !important;
   }
 }

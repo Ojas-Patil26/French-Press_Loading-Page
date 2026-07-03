@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>French Press</title>
 <link rel="stylesheet" href="coffee-press.css">
 </head>
@@ -31,21 +32,45 @@
 <div class="particles-container" id="particles-container"></div>
 
 <script>
-  // Wait until the vertical bar (plunger) reaches the bottom at 3.0 seconds
-  setTimeout(() => {
-    const wrapper = document.querySelector('.wrapper');
-    wrapper.classList.add('is-loaded');
+  const wrapper = document.querySelector('.wrapper');
 
-    // The drop finishes falling at exactly 2750ms after is-loaded is added
-    // (1950ms pour, drop starts at 1950ms and takes 800ms)
+  // Minimum brew time: the plunger reaches the bottom at 3.0 seconds,
+  // so never dismiss the loader before that (it would look cut off).
+  const MIN_BREW_TIME = 3000;
+  const pageStart = performance.now();
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Fade the loader out, then remove it from hit-testing entirely so it
+  // can't block clicks on the page underneath.
+  function dismissLoader() {
+    wrapper.style.transition = 'opacity 2s ease';
+    wrapper.style.opacity = '0';
+    wrapper.addEventListener('transitionend', () => {
+      wrapper.style.display = 'none';
+    }, { once: true });
+  }
+
+  // Tie the loading screen to the page actually finishing loading,
+  // but keep brewing until MIN_BREW_TIME so the animation completes.
+  window.addEventListener('load', () => {
+    if (reduceMotion) {
+      // Skip the pour and splatter for users who prefer reduced motion.
+      dismissLoader();
+      return;
+    }
+
+    const remaining = Math.max(0, MIN_BREW_TIME - (performance.now() - pageStart));
     setTimeout(() => {
-      createSplatter();
-      
-      // Optional: fade out the french press after the splatter to reveal the "site"
-      wrapper.style.transition = 'opacity 2s ease';
-      wrapper.style.opacity = '0';
-    }, 2750);
-  }, 3000);
+      wrapper.classList.add('is-loaded');
+
+      // The drop finishes falling at exactly 2750ms after is-loaded is added
+      // (1950ms pour, drop starts at 1950ms and takes 800ms)
+      setTimeout(() => {
+        createSplatter();
+        dismissLoader();
+      }, 2750);
+    }, remaining);
+  });
 
   function createSplatter() {
     const container = document.getElementById('particles-container');
