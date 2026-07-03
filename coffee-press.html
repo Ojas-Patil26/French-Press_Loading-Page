@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>French Press</title>
+<link rel="stylesheet" href="coffee-press.css">
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="press">
+    <div class="holder"></div>
+    <div class="lid"></div>
+    <div class="carafe">
+      <div class="drop"></div>
+      <div class="spout"></div>
+      <div class="contents">
+        <div class="brewed-coffee"></div>
+        <div class="dark-coffee"></div>
+      </div>
+    </div>
+    <div class="plunger">
+      <div class="shaft">
+        <div class="knob"></div>
+      </div>
+      <div class="filter"></div>
+    </div>
+  </div>
+</div>
+
+<div class="particles-container" id="particles-container"></div>
+
+<script>
+  // Wait until the vertical bar (plunger) reaches the bottom at 3.0 seconds
+  setTimeout(() => {
+    const wrapper = document.querySelector('.wrapper');
+    wrapper.classList.add('is-loaded');
+
+    // The drop finishes falling at exactly 2750ms after is-loaded is added
+    // (1950ms pour, drop starts at 1950ms and takes 800ms)
+    setTimeout(() => {
+      createSplatter();
+      
+      // Optional: fade out the french press after the splatter to reveal the "site"
+      wrapper.style.transition = 'opacity 2s ease';
+      wrapper.style.opacity = '0';
+    }, 2750);
+  }, 3000);
+
+  function createSplatter() {
+    const container = document.getElementById('particles-container');
+    // Colors based on the provided image (reds, blues, purples)
+    const colors = ['#e63946', '#1d3557', '#457b9d', '#8338ec', '#ffb703', '#f1faee'];
+    
+    // Create 80 particles for a wider spread
+    for (let i = 0; i < 80; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      // Random color
+      particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      
+      // Shape them like dashes/lines
+      const size = Math.random() * 8 + 4;
+      particle.style.width = `${size * 2.5}px`;
+      particle.style.height = `${Math.max(2, size * 0.3)}px`;
+      
+      // Start position (exactly at the bottom center of the screen)
+      particle.style.left = '50%';
+      particle.style.top = '98%';
+      
+      // Random trajectory and rotation (every direction)
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = Math.random() * 800 + 400; // Spread further out
+      const tx = Math.cos(angle) * velocity;
+      
+      // Even spread across the screen in all directions
+      const ty = Math.sin(angle) * velocity;
+      
+      // Apply CSS variables for animation
+      particle.style.setProperty('--tx', `${tx}px`);
+      particle.style.setProperty('--ty', `${ty}px`);
+      // Rotate particle to face its travel direction
+      particle.style.setProperty('--rot', `${angle}rad`);
+      
+      container.appendChild(particle);
+      
+      // Clean up particle element after 3 seconds
+      setTimeout(() => {
+        particle.remove();
+      }, 3000);
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "coffee-press",
+  "version": "1.0.0",
+  "description": "French press coffee animation",
+  "author": "Ojas Patil",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
