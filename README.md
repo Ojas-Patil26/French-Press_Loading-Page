@@ -56,8 +56,6 @@ npm install
 npm run dev
 ```
 
-Then open the URL Vite prints (usually http://localhost:5173) and navigate to `/coffee-press.html`.
-
 ## License
 
 [MIT](LICENSE)
